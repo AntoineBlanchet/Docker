@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Cases de Texte</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: linear-gradient(90deg, #ff7eb3, #ff758c, #84fab0, #8fd3f4);
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite;
+            color: #333;
+        }
+
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            text-align: center;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        #container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-box {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .text-box input[type="text"] {
+            flex: 1;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .text-box button {
+            margin-left: 10px;
+            padding: 10px 15px;
+            background: #f44336;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .text-box button:hover {
+            background: #d32f2f;
+        }
+
+        #actions {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        #actions button {
+            padding: 10px 15px;
+            background: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        #actions button:hover {
+            background: #388e3c;
+        }
+    </style>
+</head>
+<body>
+    <h1>Gestion de Cases de Texte</h1>
+    <div id="container">
+        <!-- Les cases de texte seront ajoutées ici -->
+    </div>
+
+    <div id="actions">
+        <button id="add-text-box">Ajouter une case</button>
+        <button id="save">Sauvegarder</button>
+    </div>
+
+    <script>
+        const container = document.getElementById('container');
+        const addTextBoxButton = document.getElementById('add-text-box');
+        const saveButton = document.getElementById('save');
+
+        // Fonction pour créer une nouvelle case de texte
+        function createTextBox(value = '') {
+            const div = document.createElement('div');
+            div.className = 'text-box';
+            
+            const input = document.createElement('input');
+            input.type = 'text';
+            input.value = value;
+            div.appendChild(input);
+            
+            const removeButton = document.createElement('button');
+            removeButton.textContent = 'Supprimer';
+            removeButton.addEventListener('click', () => div.remove());
+            div.appendChild(removeButton);
+
+            container.appendChild(div);
+        }
+
+        // Ajouter une case vide lorsqu'on clique sur "Ajouter une case"
+        addTextBoxButton.addEventListener('click', () => {
+            createTextBox();
+        });
+
+        // Sauvegarder le contenu des cases dans un fichier HTML
+        saveButton.addEventListener('click', () => {
+            const textBoxes = document.querySelectorAll('.text-box input');
+            const values = Array.from(textBoxes).map(input => input.value);
+
+            // Générer le contenu HTML
+            const htmlContent = `
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de Cases de Texte</title>
+</head>
+<body>
+    ${values.map(value => `<div>${value}</div>`).join('\n')}
+</body>
+</html>
+            `;
+
+            // Créer un fichier et proposer le téléchargement
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'index.html';
+            a.click();
+        });
+
+        // Ajouter une case initiale pour l'exemple
+        createTextBox('Exemple de texte');
+    </script>
+</body>
+</html>
